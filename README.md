@@ -16,7 +16,7 @@ Lien vers le site : https://dghack.fr
 - [ ] [Sad Crypto](sad_crypto.md)
 - [ ] [Bwing](bwing.md)
 - [ ] [StickItUp](stickitup.md)
-- [ ] [Time for something different](time_for_something_different.md)
+- [x] [Time for something different](time_for_something_different.md)
 - [ ] [Strange Thing](strange_thing.md)
 - [ ] [FlightControl](flightcontrol.md)
 - [x] [JobBoard](jobboard.md)
