@@ -132,3 +132,27 @@ dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla par
 ```
 
 Flag : `TheKeyIsTooDamnWeak!`
+
+
+#### Explication :
+Avant même d'expliquer pourquoi l'algorithme utilisé est vulnérable, il est important de dire qu'utiliser un MT (Mersenne Twister) pour générer des clefs cryptographiques n'est pas à faire dû à la facilité d'en prédire le comportement.
+L'entièreté de la classe `mersenne_rng` n'est pas intéressante pour résoudre le challenge. A vrai dire, le fait qu'un MT soit utilisé pour générer la clef n'est ici même pas pertinent.
+Concentrons nous sur la fonction `keystream` :
+```python
+def keystream(seeds, length, base=None):
+    key = base if base else []
+    for seed in seeds:
+        random = mersenne_rng(seed)
+
+        for _ in range(BLOCK):
+            if len(key) == length:
+                break
+            key.append(random.get_rand_int(0, 255))
+            random.shuffle(key)
+        if len(key) == length:
+            break
+    return key
+```
+Le paramètre `seeds` correspond à un array contenant les codes des caractères saisis en argv 1, `length` correspond à la taille de la chaîne à chiffrer.
+Dans la mesure où la fonction `keystream` ajoute 150 (variable `BLOCK`) octets "aléatoires" par caractère saisi (sauf pour le dernier bloc si la taille de la chaîne à chiffrer modulo 150 est différente de 0), il est important que le chaîne à chiffrer ait une taille supérieure ou égale à `150 * len(argv[1])`, sinon seule une partie des caractères rentrés  seront utilisés dans la génération de la clef.
+Comme le fichier à chiffré, `involucrypt1`, a une taille de 370 octets, seuls les 3 premiers caractères (`plafond(370 / 150)`) de l'argv 1 seront utilisés, d'où la facilité du bruteforce.
